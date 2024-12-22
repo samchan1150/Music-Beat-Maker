@@ -31,8 +31,29 @@ document.addEventListener('DOMContentLoaded', () => {
         octaves: 10,
         oscillator: { type: 'sine' },
         envelope: { attack: 0.001, decay: 0.5, sustain: 0, release: 1 }
-      }).toDestination() }
-      // Add more instruments here
+      }).toDestination() },
+      // Additional instruments
+      { name: 'cowbell', synth: new Tone.MetalSynth({
+        frequency: 800,
+        envelope: { attack: 0.001, decay: 0.1, release: 0.1 },
+        harmonicity: 5.1,
+        modulationIndex: 32,
+        resonance: 4000,
+        octaves: 1.5
+      }).toDestination() },
+      { name: 'ride', synth: new Tone.MetalSynth({
+        frequency: 200,
+        envelope: { attack: 0.001, decay: 1.4, release: 0.2 },
+        harmonicity: 5,
+        modulationIndex: 32,
+        resonance: 3000,
+        octaves: 1.5
+      }).toDestination() },
+      { name: 'synth', synth: new Tone.PolySynth().toDestination() },
+      { name: 'shaker', synth: new Tone.NoiseSynth({
+        noise: { type: 'pink' },
+        envelope: { attack: 0.01, decay: 0.2, sustain: 0 }
+      }).toDestination() },
     ];
   
     let steps = 16; // Default number of steps
@@ -42,6 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const stepsInput = document.getElementById('steps');
     const updateStepsBtn = document.getElementById('update-steps');
     const gridElement = document.getElementById('grid');
+    const playButton = document.getElementById('play-button');
+    const stopButton = document.getElementById('stop-button');
   
     // Create a 2D array to hold the sequencer state
     let sequencerState = [];
@@ -81,23 +104,38 @@ document.addEventListener('DOMContentLoaded', () => {
       const newSteps = Math.min(Math.max(parseInt(stepsInput.value), 4), maxSteps);
       steps = newSteps;
       stepsInput.value = steps;
+      // Need to update the Sequence and re-initialize the grid
+      loop.dispose();
+      createSequence();
       initSequencer();
     });
   
     // Sequencer playback
-    const loop = new Tone.Sequence((time, stepIndex) => {
-      instruments.forEach((instrument, instrumentIndex) => {
-        if (sequencerState[instrumentIndex][stepIndex]) {
-          if (instrument.name === 'bass') {
-            instrument.synth.triggerAttackRelease('C2', '8n', time);
-          } else if (instrument.name === 'tom') {
-            instrument.synth.triggerAttackRelease('G2', '8n', time);
-          } else {
-            instrument.synth.triggerAttackRelease('8n', time);
+    let loop;
+  
+    function createSequence() {
+      loop = new Tone.Sequence((time, stepIndex) => {
+        instruments.forEach((instrument, instrumentIndex) => {
+          if (sequencerState[instrumentIndex][stepIndex]) {
+            switch (instrument.name) {
+              case 'bass':
+                instrument.synth.triggerAttackRelease('C2', '8n', time);
+                break;
+              case 'tom':
+                instrument.synth.triggerAttackRelease('G2', '8n', time);
+                break;
+              case 'synth':
+                instrument.synth.triggerAttackRelease(['C4', 'E4', 'G4'], '8n', time);
+                break;
+              default:
+                instrument.synth.triggerAttackRelease('8n', time);
+            }
           }
-        }
-      });
-    }, [...Array(steps).keys()], '16n').start(0);
+        });
+      }, [...Array(steps).keys()], '16n');
+    }
+  
+    createSequence();
   
     // Handle tempo changes
     tempoSlider.addEventListener('input', () => {
@@ -106,21 +144,29 @@ document.addEventListener('DOMContentLoaded', () => {
       tempoValue.innerText = `${bpm} BPM`;
     });
   
-    // Start Tone.Transport on user interaction
-    async function startTransport() {
+    // Start and stop transport with buttons
+    playButton.addEventListener('click', async () => {
       await Tone.start();
       if (Tone.Transport.state !== 'started') {
         Tone.Transport.start();
       }
-    }
+      if (loop.state !== 'started') {
+        loop.start(0);
+      }
+    });
   
-    // Start transport when clicking on the page
-    document.body.addEventListener('mousedown', startTransport, { once: true });
+    stopButton.addEventListener('click', () => {
+      if (Tone.Transport.state === 'started') {
+        Tone.Transport.stop();
+      }
+      if (loop && loop.state === 'started') {
+        loop.stop();
+      }
+    });
   
     // Initialize the sequencer
     initSequencer();
   
     // Set initial BPM
     Tone.Transport.bpm.value = 120;
-  
   });

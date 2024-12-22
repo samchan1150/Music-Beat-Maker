@@ -3,12 +3,26 @@ body {
     font-family: Arial, sans-serif;
     background-color: #222;
     color: #eee;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
   }
   
   h1 {
     text-align: center;
+    margin: 20px 0;
+  }
+  
+  .controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 20px;
+  }
+  
+  .controls button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    cursor: pointer;
   }
   
   .container {
@@ -42,7 +56,6 @@ body {
   
   #grid {
     display: grid;
-    grid-template-columns: repeat(16, 30px); /* Default to 16 steps */
     grid-gap: 5px;
   }
   
@@ -58,21 +71,12 @@ body {
     background-color: #1db954;
   }
   
-  .controls {
-    text-align: center;
-    margin-top: 20px;
-  }
-  
   .controls input[type="range"] {
-    width: 200px;
+    width: 150px;
+    margin: 0 10px;
   }
   
   .controls input[type="number"] {
     width: 60px;
-  }
-  
-  .controls button {
-    padding: 5px 10px;
     margin-left: 10px;
-    cursor: pointer;
   }

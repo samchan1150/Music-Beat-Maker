@@ -7,6 +7,16 @@
 </head>
 <body>
   <h1>Music Beat Maker</h1>
+  <div class="controls">
+    <button id="play-button">Play</button>
+    <button id="stop-button">Stop</button>
+    <label for="tempo">Tempo: </label>
+    <input type="range" id="tempo" min="60" max="180" value="120">
+    <span id="tempo-value">120 BPM</span>
+    <label for="steps">Steps: </label>
+    <input type="number" id="steps" min="4" max="32" value="16">
+    <button id="update-steps">Update Steps</button>
+  </div>
   <div class="container">
     <div class="instruments">
       <div class="instrument" data-sound="kick">Kick</div>
@@ -15,19 +25,15 @@
       <div class="instrument" data-sound="clap">Clap</div>
       <div class="instrument" data-sound="bass">Bass</div>
       <div class="instrument" data-sound="tom">Tom</div>
-      <!-- Add more instruments as needed -->
+      <!-- Add more instruments -->
+      <div class="instrument" data-sound="cowbell">Cowbell</div>
+      <div class="instrument" data-sound="ride">Ride Cymbal</div>
+      <div class="instrument" data-sound="synth">Synth</div>
+      <div class="instrument" data-sound="shaker">Shaker</div>
     </div>
     <div class="sequencer">
       <div id="grid"></div>
     </div>
-  </div>
-  <div class="controls">
-    <label for="tempo">Tempo: </label>
-    <input type="range" id="tempo" min="60" max="180" value="120">
-    <span id="tempo-value">120 BPM</span>
-    <label for="steps">Steps: </label>
-    <input type="number" id="steps" min="4" max="32" value="16">
-    <button id="update-steps">Update Steps</button>
   </div>
   <!-- Include Tone.js Library -->
   <script src="https://cdn.jsdelivr.net/npm/tone@latest/build/Tone.js"></script>
