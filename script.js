@@ -196,3 +196,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set initial BPM
     Tone.Transport.bpm.value = 120;
   });
+  
