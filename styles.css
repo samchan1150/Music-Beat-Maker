@@ -3,43 +3,76 @@ body {
     font-family: Arial, sans-serif;
     background-color: #222;
     color: #eee;
-    text-align: center;
-    padding: 50px;
+    padding: 20px;
   }
   
   h1 {
-    margin-bottom: 30px;
+    text-align: center;
+    margin-bottom: 20px;
   }
   
-  .buttons {
-    margin-bottom: 30px;
+  .container {
+    display: flex;
+    justify-content: center;
   }
   
-  .sound-button {
+  .instruments {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+  }
+  
+  .instrument {
     background-color: #444;
-    border: none;
-    color: #eee;
-    padding: 15px 30px;
-    margin: 10px;
-    font-size: 18px;
+    padding: 10px;
+    margin: 5px 0;
     cursor: pointer;
+    text-align: center;
     border-radius: 5px;
   }
   
-  .sound-button.active {
+  .instrument.active {
+    background-color: #1db954;
+  }
+  
+  .sequencer {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(16, 30px); /* Default to 16 steps */
+    grid-gap: 5px;
+  }
+  
+  .step {
+    width: 30px;
+    height: 30px;
+    background-color: #444;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  
+  .step.active {
     background-color: #1db954;
   }
   
   .controls {
+    text-align: center;
     margin-top: 20px;
   }
   
-  #tempo {
+  .controls input[type="range"] {
     width: 200px;
   }
   
-  #tempo-value {
-    display: inline-block;
+  .controls input[type="number"] {
     width: 60px;
-    text-align: left;
+  }
+  
+  .controls button {
+    padding: 5px 10px;
+    margin-left: 10px;
+    cursor: pointer;
   }
