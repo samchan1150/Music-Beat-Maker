@@ -115,6 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
   
     function createSequence() {
       loop = new Tone.Sequence((time, stepIndex) => {
+
+        // Highlight current column
+        highlightColumn(stepIndex);
+
         instruments.forEach((instrument, instrumentIndex) => {
           if (sequencerState[instrumentIndex][stepIndex]) {
             switch (instrument.name) {
@@ -133,6 +137,23 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       }, [...Array(steps).keys()], '16n');
+    }
+
+    // Function to highlight the current column
+    function highlightColumn(stepIndex) {
+        // Remove highlight from all steps
+        const allSteps = document.querySelectorAll('.step');
+        allSteps.forEach(step => {
+        step.classList.remove('current-step');
+        });
+
+        // Add highlight to the current column
+        instruments.forEach((instrument, instrumentIndex) => {
+        const step = document.querySelector(`.step[data-instrument-index="${instrumentIndex}"][data-step-index="${stepIndex}"]`);
+        if (step) {
+            step.classList.add('current-step');
+        }
+        });
     }
   
     createSequence();
@@ -156,12 +177,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   
     stopButton.addEventListener('click', () => {
-      if (Tone.Transport.state === 'started') {
+        if (Tone.Transport.state === 'started') {
         Tone.Transport.stop();
-      }
-      if (loop && loop.state === 'started') {
+        }
+        if (loop && loop.state === 'started') {
         loop.stop();
-      }
+        }
+        // Remove highlights when stopped
+        const allSteps = document.querySelectorAll('.step');
+        allSteps.forEach(step => {
+            step.classList.remove('current-step');
+        });
     });
   
     // Initialize the sequencer
